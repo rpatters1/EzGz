@@ -28,6 +28,7 @@ jobs:
           echo "BUILD_DIR=build" >> $GITHUB_ENV
           echo "EXECUTABLE=build/bin/ezgz_test" >> $GITHUB_ENV
         fi
+      shell: bash
 
     - name: Create build directory
       run: mkdir -p $BUILD_DIR
