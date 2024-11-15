@@ -23,7 +23,7 @@ jobs:
       run: |
         if [ "${{ matrix.os }}" == "windows-latest" ]; then
           echo "BUILD_DIR=build" >> $GITHUB_ENV
-          echo "EXECUTABLE=build\\bin\\Release\\ezgz_test.exe" >> $GITHUB_ENV
+          echo "EXECUTABLE=build/bin/Release/ezgz_test.exe" >> $GITHUB_ENV
         else
           echo "BUILD_DIR=build" >> $GITHUB_ENV
           echo "EXECUTABLE=build/bin/ezgz_test" >> $GITHUB_ENV
@@ -38,7 +38,8 @@ jobs:
         cmake -S . -B ${{ env.BUILD_DIR }} -DCMAKE_CXX_STANDARD=${{ matrix.standard }}
 
     - name: Build with CMake
-      run: cmake --build ${{ env.BUILD_DIR }} --config Release
+      run: |
+        cmake --build ${{ env.BUILD_DIR }} --config Release
 
     - name: Run Tests
       run: |
