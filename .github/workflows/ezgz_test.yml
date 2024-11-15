@@ -43,7 +43,7 @@ jobs:
     - name: Run Tests
       run: |
         if [ "${{ matrix.os }}" == "windows-latest" ]; then
-          $EXECUTABLE
+          .\$EXECUTABLE
         else
           chmod +x $EXECUTABLE
           ./$EXECUTABLE
