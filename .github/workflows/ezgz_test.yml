@@ -6,7 +6,7 @@ on:
     push:
         branches: [master, add-tests-and-action]
 jobs:
-  build:
+  ezgz_test:
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30  # Set a custom timeout (e.g., 30 minutes)
 
