@@ -3,6 +3,12 @@
 #include <string>
 #include "ezgz.hpp"
 
+#if EZGZ_HAS_CPP20
+constexpr char kCppVersion[] = "C++20";
+#else
+constexpr char kCppVersion[] = "C++17";
+#endif
+
 template <int Size>
 struct SettingsWithInputSize : EzGz::DefaultDecompressionSettings {
 	constexpr static int inputBufferSize = Size;
@@ -31,6 +37,9 @@ int main(int, char**) {
 
 	int errors = 0;
 	int tests = 0;
+
+	std::cout << "EzGz Tests (compiled for " << kCppVersion << ")" << std::endl;
+	std::cout << "===============================" << std::endl;
 
 	auto doATest = [&] (auto is, auto shouldBe) {
 		tests++;
@@ -419,6 +428,6 @@ int main(int, char**) {
 		}
 	}
 
-	std::cout << "Passed: " << (tests - errors) << " / " << tests << ", errors: " << errors << std::endl;
+	std::cout << "Passed: " << (tests - errors) << " / " << tests << ", errors: " << errors << std::endl << std::endl;
 	return errors != 0; // if errors, report this back to calling script
 }
