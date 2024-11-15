@@ -26,12 +26,14 @@ endif()
 if (CMAKE_CXX_COMPILER_ID MATCHES "AppleClang|Clang")
     # Extra warnings for Clang/AppleClang
     set(COMMON_WARNINGS "-Wall" "-Wextra" "-Wpedantic")
+    set(DEBUG_FLAGS "-g")
 elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
     # Extra warnings for MSVC
     set(COMMON_WARNINGS "/W4")
+    set(DEBUG_FLAGS "/Zi")
     # Enable proper reporting of __cplusplus in MSVC
     add_compile_options(/Zc:__cplusplus)    
-    # Suppress warning C5051 when using C++17 with MSVC (unknown )
+    # Suppress warning C5051 when using C++17 with MSVC (unknown attribute)
     if (CMAKE_CXX_STANDARD EQUAL 17)
         add_compile_options(/wd5051)
     endif()
@@ -46,8 +48,8 @@ add_executable(ezgz_decompress ezgz_decompress.cpp)
 
 # Apply compiler options
 if (COMMON_WARNINGS)
-    target_compile_options(ezgz_test PRIVATE ${COMMON_WARNINGS} "-g")
-    target_compile_options(ezgz_decompress PRIVATE ${COMMON_WARNINGS} "-g")
+    target_compile_options(ezgz_test PRIVATE ${COMMON_WARNINGS} ${DEBUG_FLAGS})
+    target_compile_options(ezgz_decompress PRIVATE ${COMMON_WARNINGS} ${DEBUG_FLAGS})
 endif()
 
 # Add threading support
