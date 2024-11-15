@@ -420,5 +420,5 @@ int main(int, char**) {
 	}
 
 	std::cout << "Passed: " << (tests - errors) << " / " << tests << ", errors: " << errors << std::endl;
-	return 0;
+	return errors != 0; // if errors, report this back to calling script
 }

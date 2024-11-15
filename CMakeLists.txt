@@ -1,11 +1,15 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.10)
 
 project(EzGz LANGUAGES CXX)
 
 # Allow overriding the C++ standard via command line (default is C++20)
-set(CMAKE_CXX_STANDARD 20 CACHE STRING "C++ standard (e.g., 17 or 20)")
+if (NOT DEFINED CMAKE_CXX_STANDARD)
+    set(CMAKE_CXX_STANDARD 17)
+endif()
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF) # Use -std=c++XX instead of -std=gnu++XX
+
+message(STATUS "Compiling for C++" ${CMAKE_CXX_STANDARD})
 
 # Detect compiler type
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -16,6 +20,8 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     endif()
 elseif (CMAKE_CXX_COMPILER_ID MATCHES "AppleClang")
     message(STATUS "Detected AppleClang on macOS")
+elseif (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+    message(STATUS "Detected GCC")
 elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
     message(STATUS "Detected MSVC on Windows")
 else()
@@ -23,19 +29,25 @@ else()
 endif()
 
 # Compiler-specific options
-if (CMAKE_CXX_COMPILER_ID MATCHES "AppleClang|Clang")
+if (CMAKE_CXX_COMPILER_ID MATCHES "AppleClang|Clang|GNU")
     # Extra warnings for Clang/AppleClang
-    set(COMMON_WARNINGS "-Wall" "-Wextra" "-Wpedantic")
+    set(WARNING_OPTIONS "-Wall" "-Wextra" "-Wpedantic")
     set(DEBUG_FLAGS "-g")
+    # Suppress unknown attribute warning when compiling for C++17
+    if (CMAKE_CXX_STANDARD STREQUAL "17")
+        message(STATUS "Suppressing C++20 warnings for C++17")
+        list(APPEND WARNING_OPTIONS "-Wno-c++20-extensions")
+    endif()
 elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
     # Extra warnings for MSVC
-    set(COMMON_WARNINGS "/W4")
+    set(WARNING_OPTIONS "/W4")
     set(DEBUG_FLAGS "/Zi")
     # Enable proper reporting of __cplusplus in MSVC
     add_compile_options(/Zc:__cplusplus)    
-    # Suppress warning C5051 when using C++17 with MSVC (unknown attribute)
-    if (CMAKE_CXX_STANDARD EQUAL 17)
-        add_compile_options(/wd5051)
+    # Suppress unknown attribute warning when compiling for C++17
+    if (CMAKE_CXX_STANDARD STREQUAL "17")
+        message(STATUS "Suppressing C++20 warnings for C++17")
+        list(APPEND WARNING_OPTIONS "/wd5051")
     endif()
 endif()
 
@@ -47,9 +59,9 @@ add_executable(ezgz_test ezgz_test.cpp)
 add_executable(ezgz_decompress ezgz_decompress.cpp)
 
 # Apply compiler options
-if (COMMON_WARNINGS)
-    target_compile_options(ezgz_test PRIVATE ${COMMON_WARNINGS} ${DEBUG_FLAGS})
-    target_compile_options(ezgz_decompress PRIVATE ${COMMON_WARNINGS} ${DEBUG_FLAGS})
+if (WARNING_OPTIONS)
+    target_compile_options(ezgz_test PRIVATE ${WARNING_OPTIONS} ${DEBUG_FLAGS})
+    target_compile_options(ezgz_decompress PRIVATE ${WARNING_OPTIONS} ${DEBUG_FLAGS})
 endif()
 
 # Add threading support
