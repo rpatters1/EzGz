@@ -31,14 +31,14 @@ jobs:
       shell: bash
 
     - name: Create build directory
-      run: mkdir -p $BUILD_DIR
+      run: mkdir -p ${{ env.BUILD_DIR }}
 
     - name: Configure with CMake
       run: |
-        cmake -S . -B $BUILD_DIR -DCMAKE_CXX_STANDARD=${{ matrix.standard }}
+        cmake -S . -B ${{ env.BUILD_DIR }} -DCMAKE_CXX_STANDARD=${{ matrix.standard }}
 
     - name: Build with CMake
-      run: cmake --build $BUILD_DIR --config Release
+      run: cmake --build ${{ env.BUILD_DIR }} --config Release
 
     - name: Run Tests
       run: |
