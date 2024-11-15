@@ -48,3 +48,4 @@ jobs:
           chmod +x ${{ env.EXECUTABLE }}
           ./${{ env.EXECUTABLE }}
         fi
+      shell: bash
