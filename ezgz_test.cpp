@@ -418,7 +418,7 @@ int main(int, char**) {
 		{
 			std::cout << "Testing stream" << std::endl;
 			IGzStream file(data);
-			constexpr static std::array<std::string_view, 8> linesExpected = { "a", "ab", "a", "b", "aa", "", "a", "" };
+			constexpr static std::array<std::string_view, 8> linesExpected = { "q", "ab", "a", "b", "aa", "", "a", "" };
 			for (int i = 0; i < std::ssize(linesExpected); i++) {
 				std::string line;
 				std::getline(file, line, '\n');
