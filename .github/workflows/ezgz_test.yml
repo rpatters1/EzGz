@@ -34,7 +34,7 @@ jobs:
 
     - name: Configure with CMake
       run: |
-        cmake -S . -B $BUILD_DIR -G "$CMAKE_GENERATOR" -DCMAKE_CXX_STANDARD=${{ matrix.standard }}
+        cmake -S . -B $BUILD_DIR -DCMAKE_CXX_STANDARD=${{ matrix.standard }}
 
     - name: Build with CMake
       run: cmake --build $BUILD_DIR --config Release
