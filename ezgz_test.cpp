@@ -24,7 +24,7 @@ template <int Size>
 struct InputHelper : EzGz::Detail::ByteInput<SettingsWithInputSize<Size>> {
 	InputHelper(std::span<const uint8_t> source)
 	: EzGz::Detail::ByteInput<SettingsWithInputSize<Size>>([source, position = 0] (std::span<uint8_t> toFill) mutable -> int {
-		int filling = static_cast<int>(std::min(source.size() - position, toFill.size()));
+		int filling = int(std::min(source.size() - position, toFill.size()));
 //		std::cout << "Providing " << filling << " bytes of data, " << (source.size() - position - filling) << " left" << std::endl;
 		if(filling != 0)
 			memcpy(toFill.data(), &source[position], filling);
@@ -73,7 +73,7 @@ int main(int, char**) {
 		}
 
 		{
-			unsigned int twoBytes = static_cast<unsigned int>(byteReader.getBytes(2));
+			unsigned int twoBytes = unsigned(byteReader.getBytes(2));
 			doATest(twoBytes, 0b1010101010101010u);
 		}
 
@@ -103,7 +103,7 @@ int main(int, char**) {
 			while (read < tryingToRead) {
 				auto readTenBytes = reader.getRange(tryingToRead - read);
 				doATest(readTenBytes.size() < tryingToRead, true);
-				read += static_cast<int>(readTenBytes.size());
+				read += int(readTenBytes.size());
 			}
 			doATest(read, tryingToRead);
 		}
@@ -240,8 +240,8 @@ int main(int, char**) {
 		auto inspectStart = [&doATest, shouldBe, position = 0] (std::span<const char> reading) mutable -> int {
 			std::string_view correctPart = shouldBe.substr(position, reading.size());
 			doATest(std::string_view(reading.data(), reading.size()), correctPart);
-			position += static_cast<int>(reading.size());
-			return static_cast<int>(reading.size());
+			position += int(reading.size());
+			return int(reading.size());
 		};
 
 		{
